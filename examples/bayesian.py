@@ -33,8 +33,8 @@ if __name__ == '__main__':
     experiments = 500
     trials = 1000
 
-    example = BernoulliExample()
-    # example = BinomialExample()
+    #example = BernoulliExample()
+    example = BinomialExample()
 
     env = Environment(example.bandit, example.agents, example.label)
     scores, optimal = env.run(trials, experiments)

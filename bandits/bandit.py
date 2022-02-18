@@ -16,7 +16,7 @@ class MultiArmedBandit(object):
         self.optimal = 0
 
     def pull(self, action):
-        return 0, True
+        return 0, True,self.self.action_value[self.optimal] - self.action_value[action]
 
 
 class GaussianBandit(MultiArmedBandit):
@@ -36,7 +36,7 @@ class GaussianBandit(MultiArmedBandit):
 
     def pull(self, action):
         return (np.random.normal(self.action_values[action]),
-                action == self.optimal)
+                action == self.optimal,self.self.action_value[self.optimal] - self.action_value[action])
 
 
 class BinomialBandit(MultiArmedBandit):
@@ -75,7 +75,7 @@ class BinomialBandit(MultiArmedBandit):
         self.optimal = np.argmax(self.action_values)
 
     def pull(self, action):
-        return self.sample[action], action == self.optimal
+        return self.sample[action], action == self.optimal,self.self.action_value[self.optimal] - self.action_value[action]
 
     @property
     def sample(self):

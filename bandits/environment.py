@@ -20,20 +20,22 @@ class Environment(object):
     def run(self, trials=100, experiments=1):
         scores = np.zeros((trials, len(self.agents)))
         optimal = np.zeros_like(scores)
+        total_regret = np.zeros(trials)
 
         for _ in range(experiments):
             self.reset()
             for t in range(trials):
                 for i, agent in enumerate(self.agents):
                     action = agent.choose()
-                    reward, is_optimal = self.bandit.pull(action)
+                    reward, is_optimal,regret = self.bandit.pull(action)
                     agent.observe(reward)
 
                     scores[t, i] += reward
                     if is_optimal:
                         optimal[t, i] += 1
+                stotal_regret[t] = regret
 
-        return scores / experiments, optimal / experiments
+        return scores / experiments, optimal / experiments, total_regret,
 
     def plot_results(self, scores, optimal):
         sns.set_style('white')
@@ -49,6 +51,20 @@ class Environment(object):
         plt.ylabel('% Optimal Action')
         plt.xlabel('Time Step')
         plt.legend(self.agents, loc=4)
+        sns.despine()
+        plt.show()
+        
+    def plot_results(self, regret, optimal):
+        sns.set_style('white')
+        sns.set_context('talk')
+        
+        plt.title(self.label)
+        plt.plot(regret)
+        plt.ylabel('Total Regret')
+        plt.legend(self.agents, loc=4)
+        plt.xlabel('Time Step')
+        
+        
         sns.despine()
         plt.show()
 
